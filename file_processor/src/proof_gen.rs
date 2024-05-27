@@ -6,6 +6,16 @@ use std::io::{self, Write, Read};
 
 use crate::circuit::KarmaDataCircuit;
 
+pub fn verify_serialized_proof(serialized_proof: &str, serialized_vk: &str) -> Result<bool, String> {
+    let proof = deserialize_proof(serialized_proof)?;
+    let vk = deserialize_vk(serialized_vk)?;
+    let pvk = prepare_verifying_key(&vk);
+    let public_inputs = vec![];
+    verify_proof(&pvk, &proof, &public_inputs)
+        .map(|_| true)
+        .map_err(|e| format!("Proof verification failed: {:?}", e))
+}
+
 pub fn generate_serialize_verify_proof(karma: Scalar) -> Result<(String, String), String> {
     let rng = &mut OsRng;
 

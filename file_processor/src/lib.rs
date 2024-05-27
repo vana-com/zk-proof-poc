@@ -15,6 +15,15 @@ pub fn main() {
 }
 
 #[wasm_bindgen]
+pub fn verify_proof(serialized_proof: &str, serialized_vk: &str) -> bool {
+    proof_gen::verify_serialized_proof(serialized_proof, serialized_vk)
+        .unwrap_or_else(|e| {
+            error!("Error verifying proof: {}", e);
+            false
+        })
+}
+
+#[wasm_bindgen]
 pub fn extract_file_from_zip(zip_data: &[u8], file_name: &str) -> Result<String, String> {
     info!("Starting to extract file from zip");
 
