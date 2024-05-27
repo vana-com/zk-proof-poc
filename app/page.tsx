@@ -1,22 +1,24 @@
 "use client";
 
-import {ChangeEvent, useEffect, useState} from 'react';
-import init, {extract_file_from_zip, verify_proof} from "../public/pkg/file_processor";
+import { ChangeEvent, useEffect, useState } from 'react';
+import init, { extract_file_from_zip, verify_proof } from "../public/pkg/file_processor";
 
 const Home = () => {
-  const [fileContent, setFileContent] = useState<string>('');
+  const [fileContent, setFileContent] = useState<any>(null);
   const [serializedProof, setSerializedProof] = useState<string>('');
   const [serializedVk, setSerializedVk] = useState<string>('');
   const [verificationResult, setVerificationResult] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     init();
   }, []);
 
-  const handleFileChange = async (event) => {
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    setLoading(true);
     const arrayBuffer = await file.arrayBuffer();
     const zipData = new Uint8Array(arrayBuffer);
 
@@ -31,43 +33,69 @@ const Home = () => {
       } else {
         console.error("Error:", parsedResult.error);
       }
-      setFileContent(result); // or handle the parsedResult as needed
+      setFileContent(parsedResult);
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleProofChange = (event) => {
-    setSerializedProof(event.target.value);
+  const handleProofChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setSerializedProof(event.target.value.trim());
   };
 
-  const handleVkChange = (event) => {
-    setSerializedVk(event.target.value);
+  const handleVkChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setSerializedVk(event.target.value.trim());
   };
 
   const handleVerifyClick = () => {
+    setLoading(true);
     try {
       const result = verify_proof(serializedProof, serializedVk);
       setVerificationResult(result ? "Proof is valid" : "Proof is invalid");
     } catch (error) {
       console.error("Verification error:", error);
       setVerificationResult("Verification failed");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const renderJsonContent = (content: any) => {
+    return Object.entries(content).map(([key, value]) => (
+      <div key={key}>
+        <strong>{key}:</strong>
+        <pre>{typeof value === 'string' ? value : JSON.stringify(value, null, 2)}</pre>
+      </div>
+    ));
   };
 
   return (
     <div>
       <h1>Upload Zip File</h1>
-      <input type="file" onChange={handleFileChange}/>
+      <input type="file" onChange={handleFileChange} disabled={loading} />
       <div>
         <h2>Extracted File Content:</h2>
-        <pre>{fileContent}</pre>
+        <div>{fileContent && renderJsonContent(fileContent)}</div>
       </div>
       <div>
         <h2>Verify Proof and Verifying Key</h2>
-        <textarea placeholder="Serialized Proof" value={serializedProof} onChange={handleProofChange} />
-        <textarea placeholder="Serialized Verifying Key" value={serializedVk} onChange={handleVkChange} />
-        <button onClick={handleVerifyClick}>Verify</button>
+        <textarea
+          placeholder="Serialized Proof"
+          value={serializedProof}
+          onChange={handleProofChange}
+          style={{ width: '100%', height: '100px' }}
+        />
+        <textarea
+          placeholder="Serialized Verifying Key"
+          value={serializedVk}
+          onChange={handleVkChange}
+          style={{ width: '100%', height: '100px' }}
+        />
+        <button onClick={handleVerifyClick} disabled={loading}>
+          Verify
+        </button>
         <div>
           <h3>Verification Result:</h3>
           <pre>{verificationResult}</pre>
