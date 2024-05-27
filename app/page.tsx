@@ -10,16 +10,30 @@ const Home = () => {
         init();
     }, []);
 
-    const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (event) => {
         const file = event.target.files?.[0];
         if (!file) return;
 
         const arrayBuffer = await file.arrayBuffer();
         const zipData = new Uint8Array(arrayBuffer);
 
-        const content = extract_file_from_zip(zipData, 'conversations.json');
-        setFileContent(content);
+        try {
+            const result = extract_file_from_zip(zipData, 'conversations.json');
+            const parsedResult = JSON.parse(result);
+            console.log("Verification:", parsedResult.verification);
+            console.log("Number of conversations:", parsedResult.num_conversations);
+            if (parsedResult.verification === "succeeded") {
+                console.log("Serialized Proof:", parsedResult.serialized_proof);
+                console.log("Serialized Verifying Key:", parsedResult.serialized_vk);
+            } else {
+                console.error("Error:", parsedResult.error);
+            }
+            setFileContent(result); // or handle the parsedResult as needed
+        } catch (error) {
+            console.error("Error:", error);
+        }
     };
+
 
     return (
         <div>

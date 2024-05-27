@@ -1,9 +1,12 @@
 use std::io::{Cursor, Read};
 
 use log::{error, info};
-use serde_json::{from_str, Value};
+use serde_json::{from_str, json, Value};
 use wasm_bindgen::prelude::*;
 use zip::read::ZipArchive;
+
+mod circuit;
+mod proof_gen;
 
 #[wasm_bindgen(start)]
 pub fn main() {
@@ -38,5 +41,27 @@ pub fn extract_file_from_zip(zip_data: &[u8], file_name: &str) -> Result<String,
     let num_conversations = json_value.as_array().unwrap().len();
     info!("Number of objects in JSON: {}", num_conversations);
 
-    Ok(num_conversations.to_string())
+    let karma = bls12_381::Scalar::from(num_conversations as u64);
+    let result = match proof_gen::generate_serialize_verify_proof(karma) {
+        Ok((serialized_proof, serialized_vk)) => {
+            info!("Serialized Proof: {}", serialized_proof);
+            info!("Serialized Verifying Key: {}", serialized_vk);
+            json!({
+                "verification": "succeeded",
+                "serialized_proof": serialized_proof,
+                "serialized_vk": serialized_vk,
+                "num_conversations": num_conversations
+            }).to_string()
+        },
+        Err(e) => {
+            error!("Error generating proof: {}", e);
+            json!({
+                "verification": "failed",
+                "error": e,
+                "num_conversations": num_conversations
+            }).to_string()
+        },
+    };
+
+    Ok(result)
 }

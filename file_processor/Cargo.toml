@@ -10,6 +10,11 @@ log = "0.4"
 console_log = "1.0.0"
 console_error_panic_hook = "0.1"
 serde_json = "1.0.117"
+bls12_381 = "0.8.0"
+bellman = { version = "0.14", default-features = false, features = ["groth16"] }
+rand = "0.8.5"
+base64 = "0.22.1"
+getrandom = { version = "0.2", features = ["js"] }
 
 [lib]
 crate-type = ["cdylib"]
