@@ -1,27 +1,11 @@
-# WebAssembly example
+# WebAssembly + ZK Proofs
 
 This example shows how to import WebAssembly files (`.wasm`) and use them inside of a React component that is server rendered. So the WebAssembly code is executed on the server too. In the case of this example we're showing Rust compiled to WebAssembly.
 
-## Preview
-
-Preview the example live on [StackBlitz](http://stackblitz.com/):
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-webassembly)
-
 ## How to use
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
-
 ```bash
-npx create-next-app --example with-webassembly with-webassembly-app
-```
-
-```bash
-yarn create next-app --example with-webassembly with-webassembly-app
-```
-
-```bash
-pnpm create next-app --example with-webassembly with-webassembly-app
+yarn dev
 ```
 
 This example uses Rust compiled to wasm, the wasm file is included in the example, but to compile your own Rust code you'll have to [install](https://www.rust-lang.org/learn/get-started) Rust.
@@ -34,4 +18,13 @@ npm run build-rust
 yarn build-rust
 # or
 pnpm build-rust
+```
+
+### Bonus: To decompile the WASM file for inspection:
+View a text representation of the WASM file with the WebAssembly Binary Toolkit, that can be edited and recompiled back into a WASM file.
+
+```bash
+brew install wabt
+wasm2wat public/pkg/file_processor_bg.wasm -o public/pkg/file_processor_decompiled.wat
+cat public/pkg/file_processor_decompiled.wat
 ```

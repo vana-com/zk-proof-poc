@@ -3,10 +3,14 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "build-rust": "rustc --target wasm32-unknown-unknown -O --crate-type=cdylib src/add.rs -o add.wasm",
+    "build-rust": "cd file_processor && wasm-pack build --target web --out-dir ../public/pkg",
     "start": "next start"
   },
   "dependencies": {
+    "@wasmer/wasi": "^1.2.2",
+    "@wasmer/wasmfs": "^0.12.0",
+    "browserify": "^17.0.0",
+    "buffer": "^6.0.3",
     "next": "latest",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
