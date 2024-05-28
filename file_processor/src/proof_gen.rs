@@ -4,7 +4,7 @@ use rand::rngs::OsRng;
 use base64::{encode, decode};
 use std::io::{self, Write, Read};
 
-use crate::circuit::KarmaDataCircuit;
+use crate::circuit::DataCircuit;
 
 pub fn verify_serialized_proof(serialized_proof: &str, serialized_vk: &str) -> Result<bool, String> {
     let proof = deserialize_proof(serialized_proof)?;
@@ -16,10 +16,10 @@ pub fn verify_serialized_proof(serialized_proof: &str, serialized_vk: &str) -> R
         .map_err(|e| format!("Proof verification failed: {:?}", e))
 }
 
-pub fn generate_serialize_verify_proof(karma: Scalar) -> Result<(String, String), String> {
+pub fn generate_serialize_verify_proof(num_conversations: Scalar) -> Result<(String, String), String> {
     let rng = &mut OsRng;
 
-    let circuit = KarmaDataCircuit { karma: Some(karma) };
+    let circuit = DataCircuit { num_conversations: Some(num_conversations) };
     let params = generate_random_parameters::<Bls12, _, _>(circuit, rng)
         .map_err(|e| format!("Error generating parameters: {:?}", e))?;
 
@@ -27,7 +27,7 @@ pub fn generate_serialize_verify_proof(karma: Scalar) -> Result<(String, String)
     println!("Serialized Verifying Key: {}", serialized_vk);
     let deserialized_vk = deserialize_vk(&serialized_vk)?;
 
-    let circuit_for_proof = KarmaDataCircuit { karma: Some(karma) };
+    let circuit_for_proof = DataCircuit { num_conversations: Some(num_conversations) };
     let proof = create_random_proof(circuit_for_proof, &params, rng)
         .map_err(|e| format!("Error generating proof: {:?}", e))?;
 

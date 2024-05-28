@@ -50,8 +50,8 @@ pub fn extract_file_from_zip(zip_data: &[u8], file_name: &str) -> Result<String,
     let num_conversations = json_value.as_array().unwrap().len();
     info!("Number of objects in JSON: {}", num_conversations);
 
-    let karma = bls12_381::Scalar::from(num_conversations as u64);
-    let result = match proof_gen::generate_serialize_verify_proof(karma) {
+    let num_conversations_scalar = bls12_381::Scalar::from(num_conversations as u64);
+    let result = match proof_gen::generate_serialize_verify_proof(num_conversations_scalar) {
         Ok((serialized_proof, serialized_vk)) => {
             info!("Serialized Proof: {}", serialized_proof);
             info!("Serialized Verifying Key: {}", serialized_vk);
