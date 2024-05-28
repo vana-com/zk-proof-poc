@@ -1,0 +1,14 @@
+{
+  "name": "file_processor",
+  "version": "0.1.0",
+  "files": [
+    "file_processor_bg.wasm",
+    "file_processor.js",
+    "file_processor.d.ts"
+  ],
+  "module": "file_processor.js",
+  "types": "file_processor.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
