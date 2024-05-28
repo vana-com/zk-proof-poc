@@ -7,6 +7,7 @@ use zip::read::ZipArchive;
 
 mod circuit;
 mod proof_gen;
+mod chatgpt_circuit;
 
 #[wasm_bindgen(start)]
 pub fn main() {
