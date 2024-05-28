@@ -3,21 +3,18 @@
 This example shows how to import WebAssembly files (`.wasm`) and use them inside of a React component that is server rendered. So the WebAssembly code is executed on the server too. In the case of this example we're showing Rust compiled to WebAssembly.
 
 ## How to use
+This example uses Rust compiled to wasm, the wasm file is included in the example, but to compile your own Rust code you'll have to [install](https://www.rust-lang.org/learn/get-started) Rust.
+
+To compile the Rust `file_processor` module into a wasm file, run:
+
+```bash
+yarn build-rust
+```
+
+To start the development server, run:
 
 ```bash
 yarn dev
-```
-
-This example uses Rust compiled to wasm, the wasm file is included in the example, but to compile your own Rust code you'll have to [install](https://www.rust-lang.org/learn/get-started) Rust.
-
-To compile `src/add.rs` to `add.wasm` run:
-
-```bash
-npm run build-rust
-# or
-yarn build-rust
-# or
-pnpm build-rust
 ```
 
 ### Bonus: To decompile the WASM file for inspection:
