@@ -17,6 +17,7 @@ const Home = () => {
 
     const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
         setSerializedVk('');
+        setFileContent(null);
         setSerializedProof('');
         setVerificationResult('');
         const file = event.target.files?.[0];
@@ -81,6 +82,19 @@ const Home = () => {
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col items-center py-8 px-4">
             <div className="max-w-4xl w-full bg-white shadow-lg rounded-lg p-6">
+                <div className="flex justify-between items-center mb-8">
+                    <a href="https://vana.com" target="_blank" rel="noopener noreferrer">
+                        <img src="https://assets-global.website-files.com/662488d48afbf9b21e25c7d2/66248a07f971285a23646aa1_Group%20872.png"
+                            alt="Vana" className="h-6"/>
+                    </a>
+
+                    <div>
+                        <a href="https://github.com/vana-com/zk-proof-poc" target="_blank" rel="noopener noreferrer">
+                            <img src="https://cdns.iconmonstr.com/wp-content/releases/preview/2012/240/iconmonstr-github-1.png" alt="GitHub" className="h-6"/>
+                        </a>
+                    </div>
+
+                </div>
                 <h1 className="text-4xl font-bold mb-8 text-center">ChatGPT Zero-Knowledge Proof</h1>
                 <p className="text-sm mb-4">Upload a <a className={"text-blue-500"}
                                                         href={"https://help.openai.com/en/articles/7260999-how-do-i-export-my-chatgpt-history-and-data"}
